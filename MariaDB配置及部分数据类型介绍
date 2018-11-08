@@ -1,0 +1,24 @@
+对于Ubuntu/Debian系统对应DEB包，首先需要安装抽象库
+sudo apt-get install software-properties-common
+安装成功后导入签名密钥
+sudo apt-key adv --recv-keys --keyserver keyserver.ubuntu.com\ 0xcbcb082a1bb943db
+密钥导入成功后添加MariaDB的下载地址
+sudo add-apt-repository 'deb http://mirrors.hustunique.com/mariadb/repo/10.0/ubuntu quantal main'
+目前MariaDB的最新版本是10.0+需要更新下载源
+sudo apt-get update
+更新成功后下载
+sudo apt-get install mariadb-server
+由于在下载过程中可能不会出现提示设置MariaDB用户所以在安装完成后进行以下操作以进入MariaDB
+su root
+mysql -u root 
+部分常用数据类型介绍
+本次仅介绍常用数据类型中的整数型、浮点型、定点型数据
+整数型:数据分为TINYINT(1)、SMALLINT(2)、MEDIUMINT(3)、INT(4)、INTEGER(4)、BIGINT(8)类型，括号中为该类型数据所占字节，以ＴINYINT为例
+由于1个字节有8个位，所以TINYINT的无符号取值范围为(0,2^8-1)，有符号取值范围为(-2^7-1,2^7-1)（注意符号需要占一位），
+通常情况下INT与INTEGER为常用整数类型。
+浮点型/定点型:这两种数据类型均可表示小数，其中浮点型数据包括FLOAT单精度型(4字节)和DOUBLE双精度型(8字节)
+定点型数据为DECIMAL型(M+2字节)。以FLOAT型为例，由于一个字节有8位，FLOAT总共有32位
+取值范围在(-3.402823466E^38~-1.175494351E^-38)和(0, 1.175494351E^-38~3.402823466E^38)。
+这32位中符号位占1位，指数位占8位，尾数位占23位，指数位是指数据的10^n/e^n部位，尾数位指代由科学计数法的有效数字部分。
+所以浮点型数据的小数点会受指数位影响不断变化其所在位置。而定点型数据的小数位数在被定义后无法改变，这也是两个数据类型不同点。
+对于浮点型数据更适合记录如太阳质量、原子质量等数量级太大或太小而不能准确刻画的量，MariaDB中要记录准确小数更适合使用定点型数据。
